@@ -46,14 +46,27 @@
   <main class="mt-10">
     <h3 class='text-3xl font-semibold text-center'>Our Products</h3><p class='text-center'>Here are some amazing products.</p>
   </main>
+  <script>
+  function addToCart(name, qty, price) {
+    qty = parseInt(qty);
+    if (qty <= 0) return;
+
+    let cart = JSON.parse(localStorage.getItem("abishmarCart") || "[]");
+    let existing = cart.find(item => item.name === name);
+    if (existing) {
+      existing.qty += qty;
+    } else {
+      cart.push({ name, qty, price });
+    }
+    localStorage.setItem("abishmarCart", JSON.stringify(cart));
+    alert(`${qty} x ${name} added to cart!`);
+  }
+  </script>
 </body>
-</html>
-<div class="glass p-4 text-center" data-name="shoe" data-price="7500">
-  <img src="shoe1.jpg" alt="Brown Leather Shoe" class="w-full h-40 object-cover rounded-lg mb-2 cursor-pointer" onclick="zoomImage(this)">
+  <div class="glass p-4 text-center">
+  <img src="shoe1.jpg" alt="Brown Shoe" class="w-full h-40 object-cover rounded-lg mb-2">
   <h4 class="text-xl font-medium">Brown Leather Shoe</h4>
-  <p class="text-sm italic mb-2">Stylish, durable, and perfect for all occasions.</p>
-  <input type="number" min="1" value="1" class="w-16 p-1 mt-2 text-black rounded" id="qty-shoe1">
-  <button onclick="addToCart('Brown Leather Shoe', document.getElementById('qty-shoe1').value, 7500)" class="mt-2 block bg-purple-500 px-4 py-2 rounded-full hover:bg-purple-600">
-    Add to Cart
-  </button>
-</div>
+  <p class="text-sm italic mb-2">Durable and elegant shoe.</p>
+  <input type="number" value="1" min="1" id="qty-shoe1" class="w-16 p-1 text-black rounded">
+  <button onclick="addToCart('Brown Leather Shoe', document.getElementById('qty-shoe1').value, 7500)" class="bg-purple-500 px-4 py-2 mt-2 rounded-full hover:bg-purple-600">Add to Cart</button>
+  </div> 
