@@ -46,5 +46,28 @@
   <main class="mt-10">
     <h3 class='text-3xl font-semibold text-center'>Checkout</h3><p class='text-center'>Your cart and QR code will appear here.</p>
   </main>
+  <script>
+  window.onload = function () {
+    const cart = JSON.parse(localStorage.getItem("abishmarCart") || "[]");
+    const cartDiv = document.getElementById("cart-items");
+    const totalDiv = document.getElementById("total-price");
+    let total = 0;
+
+    cart.forEach(item => {
+      const line = `${item.name} x ${item.qty} = ₦${item.qty * item.price}`;
+      total += item.qty * item.price;
+      const div = document.createElement("div");
+      div.className = "mb-2";
+      div.textContent = line;
+      cartDiv.appendChild(div);
+    });
+
+    totalDiv.textContent = `Total: ₦${total}`;
+
+    const message = cart.map(i => `${i.name} x${i.qty}`).join(", ");
+    const whatsappLink = `https://wa.me/2348067577138?text=I%20want%20to%20order:%20${encodeURIComponent(message)}`;
+    document.getElementById("checkout-link").href = whatsappLink;
+  };
+  </script>
 </body>
 </html>
