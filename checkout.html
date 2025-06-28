@@ -117,3 +117,65 @@
 <div id="cart-items" class="text-left max-w-xl mx-auto my-4"></div>
 <p id="total-price" class="font-bold text-xl text-center"></p>
 <a id="checkout-link" href="#" target="_blank" class="bg-purple-500 text-black px-6 py-3 rounded-full glass hover:shadow-xl block w-fit mx-auto mt-4">Complete Order on WhatsApp</a>
+<script src="https://cdn.jsdelivr.net/npm/qrious"></script>
+<script>
+  function updateCartDisplay() {
+    const cartDiv = document.getElementById("cart-items");
+    const totalDiv = document.getElementById("total-price");
+    cartDiv.innerHTML = "";
+    let cart = JSON.parse(localStorage.getItem("abishmarCart") || "[]");
+    let total = 0;
+
+    cart.forEach((item, index) => {
+      total += item.qty * item.price;
+      const itemDiv = document.createElement("div");
+      itemDiv.className = "glass p-4 rounded flex justify-between items-center";
+
+      itemDiv.innerHTML = `
+        <div>
+          <p class="font-semibold">${item.name}</p>
+          <p class="text-sm text-purple-300">₦${item.price} x ${item.qty} = ₦${item.price * item.qty}</p>
+        </div>
+        <div class="flex items-center space-x-2">
+          <button onclick="changeQty(${index}, -1)" class="px-2 bg-purple-500 rounded">-</button>
+          <span>${item.qty}</span>
+          <button onclick="changeQty(${index}, 1)" class="px-2 bg-purple-500 rounded">+</button>
+          <button onclick="removeItem(${index})" class="ml-2 text-red-500">❌</button>
+        </div>
+      `;
+      cartDiv.appendChild(itemDiv);
+    });
+
+    totalDiv.textContent = `Total: ₦${total}`;
+
+    // WhatsApp + QR update
+    const whatsappMsg = cart.map(i => `${i.name} x${i.qty}`).join(", ");
+    const whatsappLink = `https://wa.me/2348067577138?text=I%20want%20to%20order:%20${encodeURIComponent(whatsappMsg)}`;
+    document.getElementById("checkout-link").href = whatsappLink;
+
+    const qr = new QRious({
+      element: document.getElementById("qr-code"),
+      value: whatsappLink,
+      size: 200
+    });
+
+    document.getElementById("download-qr").href = document.getElementById("qr-code").toDataURL();
+  }
+
+  function changeQty(index, delta) {
+    let cart = JSON.parse(localStorage.getItem("abishmarCart") || "[]");
+    cart[index].qty += delta;
+    if (cart[index].qty <= 0) cart.splice(index, 1);
+    localStorage.setItem("abishmarCart", JSON.stringify(cart));
+    updateCartDisplay();
+  }
+
+  function removeItem(index) {
+    let cart = JSON.parse(localStorage.getItem("abishmarCart") || "[]");
+    cart.splice(index, 1);
+    localStorage.setItem("abishmarCart", JSON.stringify(cart));
+    updateCartDisplay();
+  }
+
+  window.onload = updateCartDisplay;
+</script>
