@@ -46,7 +46,9 @@
   <main class="mt-10">
     <h3 class='text-3xl font-semibold text-center'>Checkout</h3><p class='text-center'>Your cart and QR code will appear here.</p>
   </main>
-  <script>
+</body>
+</html>
+<script>
   window.onload = function () {
     const cart = JSON.parse(localStorage.getItem("abishmarCart") || "[]");
     const cartDiv = document.getElementById("cart-items");
@@ -68,6 +70,4 @@
     const whatsappLink = `https://wa.me/2348067577138?text=I%20want%20to%20order:%20${encodeURIComponent(message)}`;
     document.getElementById("checkout-link").href = whatsappLink;
   };
-  </script>
-</body>
-</html>
+</script>
